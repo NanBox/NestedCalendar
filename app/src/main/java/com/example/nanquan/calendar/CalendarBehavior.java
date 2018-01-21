@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -109,19 +108,22 @@ public class CalendarBehavior extends HeaderBehavior {
 
 //                if (curOffset != dy) {
             int minOffset2 = -(child.getMeasuredHeight() / 7) * 6;
-            int offset = dy = MathUtils.clamp(ablBehavior.getTopAndBottomOffset() - dy, minOffset2, 0);
+            int offset = MathUtils.clamp(ablBehavior.getTopAndBottomOffset() - dy, minOffset2, 0);
 //            if (minOffset2 < ablBehavior.getTopAndBottomOffset() - dy &&
 //                    0 > ablBehavior.getTopAndBottomOffset() - dy) {
+
             ablBehavior.setTopAndBottomOffset(offset);
-            // Update how much dy we have consumed
-            consumed[1] = dy;
-        RecyclerView rv = (RecyclerView) target;
-        ((RecyclerView) target).setOnFlingListener(new RecyclerView.OnFlingListener() {
-            @Override
-            public boolean onFling(int velocityX, int velocityY) {
-                return false;
+            if (offset > minOffset2 && offset < 0) {
+                // Update how much dy we have consumed
+                consumed[1] = dy;
             }
-        });
+//        RecyclerView rv = (RecyclerView) target;
+//        ((RecyclerView) target).setOnFlingListener(new RecyclerView.OnFlingListener() {
+//            @Override
+//            public boolean onFling(int velocityX, int velocityY) {
+//                return false;
+//            }
+//        });
 //            }
 //                }
 //            }
@@ -138,7 +140,6 @@ public class CalendarBehavior extends HeaderBehavior {
     }
 
 
-
 //            final int topHeight = (getMeasuredHeight() / 7) * weekOfMonth;
 //
 //            if (top > 0) {
@@ -146,6 +147,17 @@ public class CalendarBehavior extends HeaderBehavior {
 //            } else if (top < -topHeight) {
 //                return -topHeight;
 //            }
+
+
+//    @Override
+//    public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, float velocityX, float velocityY, boolean consumed) {
+//        return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
+//    }
+//
+//    @Override
+//    public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
+//        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type);
+//    }
 
 
 }
