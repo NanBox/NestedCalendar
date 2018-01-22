@@ -34,9 +34,11 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     }
 
 //    @Override
-//    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull View child, @NonNull View target, float velocityX, float velocityY) {
+//    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, float velocityX, float velocityY) {
 //        return true;
 //    }
+
+    private boolean shouldInitConsumed;
 
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
@@ -63,6 +65,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     consumed[1] = dy;
                 }
                 if (listBehavior.getTopAndBottomOffset() <= listMinOffset) {
+                    shouldInitConsumed = true;
                     setWeekMode(child, listBehavior);
                 }
             }
@@ -78,9 +81,13 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                 int listMinOffset = -calendarLineHeight * 5;
                 int listOffset = MathUtils.clamp(-calendarLineHeight * 5 - dy, listMinOffset, 0);
                 listBehavior.setTopAndBottomOffset(listOffset);
-                if (listOffset > listMinOffset && listOffset < 0) {
+                if (shouldInitConsumed) {
+                    consumed[1] = -listMinOffset;
+                    shouldInitConsumed = false;
+                } else if (listOffset > listMinOffset && listOffset < 0) {
                     consumed[1] = dy;
                 }
+
                 if (listBehavior.getTopAndBottomOffset() > listMinOffset + 5) {
                     setMonthMode(child);
                 }
@@ -89,16 +96,25 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     }
 
     // 切换星期模式
-    private void setWeekMode(MaterialCalendarView calendarView, CalendarScrollBehavior listBehavior) {
+    private void setWeekMode(final MaterialCalendarView calendarView, final CalendarScrollBehavior listBehavior) {
         if (calendarMode == CalendarMode.WEEKS) {
             return;
         }
-        calendarView.state().edit()
-                .setCalendarDisplayMode(CalendarMode.WEEKS)
-                .commit();
-        calendarMode = CalendarMode.WEEKS;
-        setTopAndBottomOffset(0);
-        listBehavior.setTopAndBottomOffset(0);
+        calendarView.setVisibility(View.INVISIBLE);
+        calendarView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                calendarView.state().edit()
+                        .setCalendarDisplayMode(CalendarMode.WEEKS)
+                        .commit();
+                calendarMode = CalendarMode.WEEKS;
+                setTopAndBottomOffset(0);
+                listBehavior.setTopAndBottomOffset(0);
+
+                calendarView.setVisibility(View.VISIBLE);
+            }
+        }, 1);
+
     }
 
     // 切换月模式
