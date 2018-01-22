@@ -38,8 +38,6 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
 //        return true;
 //    }
 
-    private boolean shouldInitConsumed;
-
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
@@ -65,14 +63,10 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     consumed[1] = dy;
                 }
                 if (listBehavior.getTopAndBottomOffset() <= listMinOffset) {
-                    shouldInitConsumed = true;
                     setWeekMode(child, listBehavior);
                 }
             }
         } else {
-            // 固定头部
-            setTopAndBottomOffset(0);
-
             // 移动列表
             final CoordinatorLayout.Behavior behavior =
                     ((CoordinatorLayout.LayoutParams) target.getLayoutParams()).getBehavior();
@@ -81,10 +75,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                 int listMinOffset = -calendarLineHeight * 5;
                 int listOffset = MathUtils.clamp(-calendarLineHeight * 5 - dy, listMinOffset, 0);
                 listBehavior.setTopAndBottomOffset(listOffset);
-                if (shouldInitConsumed) {
-                    consumed[1] = -listMinOffset;
-                    shouldInitConsumed = false;
-                } else if (listOffset > listMinOffset && listOffset < 0) {
+                if (listOffset > listMinOffset && listOffset < 0) {
                     consumed[1] = dy;
                 }
 
@@ -100,21 +91,11 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         if (calendarMode == CalendarMode.WEEKS) {
             return;
         }
-        calendarView.setVisibility(View.INVISIBLE);
-        calendarView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                calendarView.state().edit()
-                        .setCalendarDisplayMode(CalendarMode.WEEKS)
-                        .commit();
-                calendarMode = CalendarMode.WEEKS;
-                setTopAndBottomOffset(0);
-                listBehavior.setTopAndBottomOffset(0);
-
-                calendarView.setVisibility(View.VISIBLE);
-            }
-        }, 1);
-
+        calendarView.state().edit()
+                .setCalendarDisplayMode(CalendarMode.WEEKS)
+                .commit();
+        calendarMode = CalendarMode.WEEKS;
+        setTopAndBottomOffset(0);
     }
 
     // 切换月模式
