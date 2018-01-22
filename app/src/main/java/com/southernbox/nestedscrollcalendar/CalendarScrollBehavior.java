@@ -1,4 +1,4 @@
-package com.example.nanquan.calendar;
+package com.southernbox.nestedscrollcalendar;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.nanquan.calendar.helper.ViewOffsetBehavior;
+import com.southernbox.nestedscrollcalendar.helper.ViewOffsetBehavior;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.List;

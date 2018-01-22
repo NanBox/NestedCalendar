@@ -1,4 +1,4 @@
-package com.example.nanquan.calendar;
+package com.southernbox.nestedscrollcalendar;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.nanquan.calendar;
+package com.southernbox.nestedscrollcalendar;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
