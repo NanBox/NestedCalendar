@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.nanquan.calendar.helper.ViewOffsetBehavior;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.Calendar;
@@ -19,6 +20,8 @@ import java.util.Calendar;
 
 public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
 
+    private int calendarLineHeight;
+    private CalendarMode calendarMode = CalendarMode.MONTHS;
     private int weekOfMonth = Calendar.getInstance().get(Calendar.WEEK_OF_MONTH);
 
     public CalendarBehavior(Context context, AttributeSet attrs) {
@@ -27,12 +30,6 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
 
     @Override
     public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
-        final CoordinatorLayout.Behavior behavior =
-                ((CoordinatorLayout.LayoutParams) target.getLayoutParams()).getBehavior();
-        if (behavior instanceof CalendarScrollBehavior) {
-            final CalendarScrollBehavior listBehavior = (CalendarScrollBehavior) behavior;
-            return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 && !listBehavior.getIsOnTop();
-        }
         return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
@@ -45,23 +42,76 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
 
-        // 移动头部
-        int headerMinOffset = -(child.getMeasuredHeight() / 7) * weekOfMonth;
-        int headerOffset = MathUtils.clamp(getTopAndBottomOffset() - dy, headerMinOffset, 0);
-        setTopAndBottomOffset(headerOffset);
+        if (calendarMode == CalendarMode.MONTHS) {
+            // 移动头部
+            if (calendarLineHeight == 0) {
+                calendarLineHeight = child.getMeasuredHeight() / 7;
+            }
+            int headerMinOffset = -calendarLineHeight * (weekOfMonth - 1);
+            int headerOffset = MathUtils.clamp(getTopAndBottomOffset() - dy, headerMinOffset, 0);
+            setTopAndBottomOffset(headerOffset);
 
-        // 移动列表
-        final CoordinatorLayout.Behavior behavior =
-                ((CoordinatorLayout.LayoutParams) target.getLayoutParams()).getBehavior();
-        if (behavior instanceof CalendarScrollBehavior) {
-            final CalendarScrollBehavior listBehavior = (CalendarScrollBehavior) behavior;
-            int listMinOffset = -(child.getMeasuredHeight() / 7) * 6;
-            int listOffset = MathUtils.clamp(listBehavior.getTopAndBottomOffset() - dy, listMinOffset, 0);
-            listBehavior.setTopAndBottomOffset(listOffset);
-            if (listOffset > listMinOffset && listOffset < 0) {
-                consumed[1] = dy;
+            // 移动列表
+            final CoordinatorLayout.Behavior behavior =
+                    ((CoordinatorLayout.LayoutParams) target.getLayoutParams()).getBehavior();
+            if (behavior instanceof CalendarScrollBehavior) {
+                final CalendarScrollBehavior listBehavior = (CalendarScrollBehavior) behavior;
+                int listMinOffset = -calendarLineHeight * 5;
+                int listOffset = MathUtils.clamp(listBehavior.getTopAndBottomOffset() - dy, listMinOffset, 0);
+                listBehavior.setTopAndBottomOffset(listOffset);
+                if (listOffset > listMinOffset && listOffset < 0) {
+                    consumed[1] = dy;
+                }
+                if (listBehavior.getTopAndBottomOffset() <= listMinOffset) {
+                    setWeekMode(child, listBehavior);
+                }
+            }
+        } else {
+            // 固定头部
+            setTopAndBottomOffset(0);
+
+            // 移动列表
+            final CoordinatorLayout.Behavior behavior =
+                    ((CoordinatorLayout.LayoutParams) target.getLayoutParams()).getBehavior();
+            if (behavior instanceof CalendarScrollBehavior) {
+                final CalendarScrollBehavior listBehavior = (CalendarScrollBehavior) behavior;
+                int listMinOffset = -calendarLineHeight * 5;
+                int listOffset = MathUtils.clamp(-calendarLineHeight * 5 - dy, listMinOffset, 0);
+                listBehavior.setTopAndBottomOffset(listOffset);
+                if (listOffset > listMinOffset && listOffset < 0) {
+                    consumed[1] = dy;
+                }
+                if (listBehavior.getTopAndBottomOffset() > listMinOffset + 5) {
+                    setMonthMode(child);
+                }
             }
         }
+    }
+
+    // 切换星期模式
+    private void setWeekMode(MaterialCalendarView calendarView, CalendarScrollBehavior listBehavior) {
+        if (calendarMode == CalendarMode.WEEKS) {
+            return;
+        }
+        calendarView.state().edit()
+                .setCalendarDisplayMode(CalendarMode.WEEKS)
+                .commit();
+        calendarMode = CalendarMode.WEEKS;
+        setTopAndBottomOffset(0);
+        listBehavior.setTopAndBottomOffset(0);
+    }
+
+    // 切换月模式
+    private void setMonthMode(MaterialCalendarView calendarView) {
+        if (calendarMode == CalendarMode.MONTHS) {
+            return;
+        }
+        calendarView.state().edit()
+                .setCalendarDisplayMode(CalendarMode.MONTHS)
+                .commit();
+        calendarMode = CalendarMode.MONTHS;
+
+        setTopAndBottomOffset(-calendarLineHeight * (weekOfMonth - 1));
     }
 
     public void setWeekOfMonth(int weekOfMonth) {
