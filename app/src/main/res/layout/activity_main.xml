@@ -8,14 +8,14 @@
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="com.example.nanquan.calendar.CalendarBehavior"/>
+        app:layout_behavior="com.southernbox.nestedscrollcalendar.CalendarBehavior" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
-        android:background="@android:color/darker_gray"
-        android:layout_marginBottom="50dp"
         android:layout_height="match_parent"
-        app:layout_behavior="com.example.nanquan.calendar.CalendarScrollBehavior" />
+        android:layout_marginBottom="50dp"
+        android:background="@android:color/darker_gray"
+        app:layout_behavior="com.southernbox.nestedscrollcalendar.CalendarScrollBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>
