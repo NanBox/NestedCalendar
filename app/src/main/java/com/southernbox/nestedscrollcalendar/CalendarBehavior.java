@@ -62,19 +62,12 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                 if (listOffset > listMinOffset && listOffset < 0) {
                     consumed[1] = dy;
                 }
-                if (listBehavior.getTopAndBottomOffset() <= listMinOffset) {
+                if (listOffset == listMinOffset) {
                     setWeekMode(child, listBehavior);
                 }
             }
         } else if (dy < 0) {
             setMonthMode(child);
-            final CoordinatorLayout.Behavior behavior =
-                    ((CoordinatorLayout.LayoutParams) target.getLayoutParams()).getBehavior();
-            if (behavior instanceof CalendarScrollBehavior) {
-                final CalendarScrollBehavior listBehavior = (CalendarScrollBehavior) behavior;
-                listBehavior.setTopAndBottomOffset(listBehavior.getTopAndBottomOffset() - dy);
-                consumed[1] = dy;
-            }
         }
     }
 

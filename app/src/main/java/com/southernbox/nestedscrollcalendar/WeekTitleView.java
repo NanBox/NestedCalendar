@@ -59,8 +59,13 @@ public class WeekTitleView extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        final int specWidthSize = MeasureSpec.getSize(widthMeasureSpec);
-        final int specHeightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int specWidthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int specHeightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int specHeightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+        if (specHeightMode == MeasureSpec.AT_MOST) {
+            specHeightSize = specWidthSize / DEFAULT_DAYS_IN_WEEK;
+        }
 
         setMeasuredDimension(specWidthSize, specHeightSize);
 

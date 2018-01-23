@@ -21,7 +21,7 @@
 
     <com.southernbox.nestedscrollcalendar.WeekTitleView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="#fafafa" />
 
 </android.support.design.widget.CoordinatorLayout>
