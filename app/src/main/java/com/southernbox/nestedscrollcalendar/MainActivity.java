@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initCalendarView() {
         calendarView = findViewById(R.id.calendar);
-
-        calendarView.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
         calendarView.setTopbarVisible(false);
 
         Calendar calendar = Calendar.getInstance();

@@ -22,10 +22,8 @@ public class WeekTitleView extends ViewGroup {
     protected static final int DEFAULT_DAYS_IN_WEEK = 7;
 
     private Context mContext;
-
-    private int textResourceId;
-
     private Calendar calendar;
+    private int textResourceId;
 
     public WeekTitleView(Context context) {
         this(context, null);
@@ -37,17 +35,14 @@ public class WeekTitleView extends ViewGroup {
 
     public WeekTitleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-
         this.mContext = context;
-
-        TypedArray a = mContext.getTheme()
-                .obtainStyledAttributes(attrs, com.prolificinteractive.materialcalendarview.R.styleable.MaterialCalendarView, 0, 0);
-        textResourceId = a.getResourceId(
-                com.prolificinteractive.materialcalendarview.R.styleable.MaterialCalendarView_mcv_weekDayTextAppearance,
-                com.prolificinteractive.materialcalendarview.R.style.TextAppearance_MaterialCalendarWidget_WeekDay);
-
         calendar = Calendar.getInstance();
+        TypedArray a = mContext
+                .getTheme()
+                .obtainStyledAttributes(attrs, R.styleable.NestedScrollCalendar, 0, 0);
+        textResourceId = a.getResourceId(
+                R.styleable.NestedScrollCalendar_WeekTitleTextAppearance,
+                R.style.TextAppearance_NestedScrollCalendar_WeekTitle);
         addView();
     }
 
@@ -55,11 +50,9 @@ public class WeekTitleView extends ViewGroup {
         for (int i = 1; i <= DEFAULT_DAYS_IN_WEEK; i++) {
             TextView weekTextView = new TextView(getContext());
             calendar.set(Calendar.DAY_OF_WEEK, i);
-            weekTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-
             weekTextView.setTextAppearance(mContext, textResourceId);
             weekTextView.setGravity(Gravity.CENTER);
-
+            weekTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
             addView(weekTextView);
             calendar.add(DATE, 1);
         }
@@ -70,64 +63,38 @@ public class WeekTitleView extends ViewGroup {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         final int specWidthSize = MeasureSpec.getSize(widthMeasureSpec);
-        final int specWidthMode = MeasureSpec.getMode(widthMeasureSpec);
         final int specHeightSize = MeasureSpec.getSize(heightMeasureSpec);
-        final int specHeightMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        //We expect to be somewhere inside a MaterialCalendarView, which should measure EXACTLY
-        if (specHeightMode == MeasureSpec.UNSPECIFIED || specWidthMode == MeasureSpec.UNSPECIFIED) {
-            throw new IllegalStateException("CalendarPagerView should never be left to decide it's size");
-        }
-
-        //The spec width should be a correct multiple
-        final int measureTileWidth = specWidthSize / DEFAULT_DAYS_IN_WEEK;
-        final int measureTileHeight = specHeightSize;
-
-        //Just use the spec sizes
         setMeasuredDimension(specWidthSize, specHeightSize);
 
         for (int i = 0; i < getChildCount(); i++) {
             final View child = getChildAt(i);
-
             int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(
-                    measureTileWidth,
+                    specWidthSize / DEFAULT_DAYS_IN_WEEK,
                     MeasureSpec.EXACTLY
             );
-
             int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-                    measureTileHeight,
+                    specHeightSize,
                     MeasureSpec.EXACTLY
             );
-
             child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
         }
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        final int count = getChildCount();
 
-        final int parentLeft = 0;
+        int childLeft = 0;
 
-        int childTop = 0;
-        int childLeft = parentLeft;
-
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < getChildCount(); i++) {
             final View child = getChildAt(i);
 
             final int width = child.getMeasuredWidth();
             final int height = child.getMeasuredHeight();
 
-            child.layout(childLeft, childTop, childLeft + width, childTop + height);
+            child.layout(childLeft, 0, childLeft + width, height);
 
             childLeft += width;
-
-            //We should warp every so many children
-            if (i % DEFAULT_DAYS_IN_WEEK == (DEFAULT_DAYS_IN_WEEK - 1)) {
-                childLeft = parentLeft;
-                childTop += height;
-            }
-
         }
     }
 }
