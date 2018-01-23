@@ -8,9 +8,9 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.southernbox.nestedscrollcalendar.helper.ViewOffsetBehavior;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.southernbox.nestedscrollcalendar.helper.ViewOffsetBehavior;
 
 import java.util.Calendar;
 
@@ -79,7 +79,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     consumed[1] = dy;
                 }
 
-                if (listBehavior.getTopAndBottomOffset() > listMinOffset + 5) {
+                if (listBehavior.getTopAndBottomOffset() > listMinOffset) {
                     setMonthMode(child);
                 }
             }
