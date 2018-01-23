@@ -21,9 +21,9 @@ public class WeekTitleView extends ViewGroup {
 
     protected static final int DEFAULT_DAYS_IN_WEEK = 7;
 
-    private Context mContext;
     private Calendar calendar;
-    private int textResourceId;
+
+    private float textSize;
 
     public WeekTitleView(Context context) {
         this(context, null);
@@ -35,14 +35,11 @@ public class WeekTitleView extends ViewGroup {
 
     public WeekTitleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mContext = context;
         calendar = Calendar.getInstance();
-        TypedArray a = mContext
+        TypedArray a = context
                 .getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.NestedScrollCalendar, 0, 0);
-        textResourceId = a.getResourceId(
-                R.styleable.NestedScrollCalendar_WeekTitleTextAppearance,
-                R.style.TextAppearance_NestedScrollCalendar_WeekTitle);
+                .obtainStyledAttributes(attrs, R.styleable.WeekTitleView, 0, 0);
+        textSize = a.getLayoutDimension(R.styleable.WeekTitleView_text_size, 12);
         addView();
     }
 
@@ -50,7 +47,7 @@ public class WeekTitleView extends ViewGroup {
         for (int i = 1; i <= DEFAULT_DAYS_IN_WEEK; i++) {
             TextView weekTextView = new TextView(getContext());
             calendar.set(Calendar.DAY_OF_WEEK, i);
-            weekTextView.setTextAppearance(mContext, textResourceId);
+            weekTextView.setTextSize(textSize);
             weekTextView.setGravity(Gravity.CENTER);
             weekTextView.setText(calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
             addView(weekTextView);

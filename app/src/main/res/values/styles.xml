@@ -8,8 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="TextAppearance.NestedScrollCalendar.WeekTitle" parent="android:TextAppearance.DeviceDefault.Small">
-        <item name="android:textSize">12sp</item>
-    </style>
-
 </resources>
