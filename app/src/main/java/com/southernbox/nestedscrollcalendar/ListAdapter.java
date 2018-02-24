@@ -2,6 +2,7 @@ package com.southernbox.nestedscrollcalendar;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,9 +42,15 @@ public class ListAdapter extends RecyclerView.Adapter {
 
         TextView textView;
 
-        public Holder(View itemView) {
+        Holder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.tv);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 }

@@ -14,6 +14,7 @@ import java.util.Locale;
 import static java.util.Calendar.DATE;
 
 /**
+ * 星期标题
  * Created by SouthernBox on 2018/1/23.
  */
 
@@ -95,7 +96,6 @@ public class WeekTitleView extends ViewGroup {
             final int height = child.getMeasuredHeight();
 
             child.layout(childLeft, 0, childLeft + width, height);
-
             childLeft += width;
         }
     }

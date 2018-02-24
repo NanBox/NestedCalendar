@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.Scroller;
 
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -15,7 +17,10 @@ import com.southernbox.nestedscrollcalendar.helper.ViewOffsetBehavior;
 
 import java.util.Calendar;
 
+import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
+
 /**
+ * 列表 Behavior
  * Created by SouthernBox on 2018/1/19.
  */
 
@@ -37,7 +42,6 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     @Override
     public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull final MaterialCalendarView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
-        Log.d("666", "start");
         if (calendarMode == CalendarMode.MONTHS) {
             // 移动头部
             if (calendarLineHeight == 0) {
@@ -72,43 +76,38 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         }
     }
 
-//    @Override
-//    public void onStopNestedScroll(@NonNull final CoordinatorLayout coordinatorLayout, @NonNull final MaterialCalendarView child, @NonNull final View target, int type) {
-//        super.onStopNestedScroll(coordinatorLayout, child, target, type);
-//        if (target.getTop() == calendarLineHeight * 2 ||
-//                target.getTop() == calendarLineHeight * 7) {
-//            return;
-//        }
-//        Log.d("666", "stop");
-//        if (calendarMode == CalendarMode.MONTHS) {
-//            final Scroller scroller = new Scroller(coordinatorLayout.getContext());
-//            //设置scroller的滚动偏移量
-//            scroller.startScroll(0, child.getTop(), 0, 0 - child.getTop(), 500);
-//            ViewCompat.postOnAnimation(child, new Runnable() {
-//                @Override
-//                public void run() {
-//                    //返回值为boolean，true说明滚动尚未完成，false说明滚动已经完成。
-//                    // 这是一个很重要的方法，通常放在View.computeScroll()中，用来判断是否滚动是否结束。
-//                    if (scroller.computeScrollOffset()) {
-//                        int delta = scroller.getCurrY();
-//                        Log.d("666666666666", scroller.getCurrY() + "");
-//                        coordinatorLayout.onNestedPreScroll(target, 0, delta, new int[2]);
-//                        ViewCompat.postOnAnimation(child, this);
-//                    }
-//                }
-//            });
-//        }
-//    }
+    @Override
+    public void onStopNestedScroll(@NonNull final CoordinatorLayout coordinatorLayout, @NonNull final MaterialCalendarView child, @NonNull final View target, int type) {
+        super.onStopNestedScroll(coordinatorLayout, child, target, type);
+        if (target.getTop() == calendarLineHeight * 2 ||
+                target.getTop() == calendarLineHeight * 7) {
+            return;
+        }
+        if (calendarMode == CalendarMode.MONTHS) {
+            final Scroller scroller = new Scroller(coordinatorLayout.getContext());
+            //设置scroller的滚动偏移量
+            scroller.startScroll(0, target.getTop(), 0, calendarLineHeight * 4 - target.getTop(), 500);
+            ViewCompat.postOnAnimation(child, new Runnable() {
+                @Override
+                public void run() {
+                    // 返回值为boolean，true说明滚动尚未完成，false说明滚动已经完成。
+                    // 这是一个很重要的方法，通常放在View.computeScroll()中，用来判断是否滚动是否结束。
+                    if (scroller.computeScrollOffset()) {
+                        int delta = scroller.getCurrY() - target.getTop();
+                        ((RecyclerView) target).startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
+                        ((RecyclerView) target).dispatchNestedPreScroll(0, delta, new int[2], new int[2], TYPE_TOUCH);
+                        ViewCompat.postOnAnimation(child, this);
+                    }
+                }
+            });
+        }
+    }
 
-//    @Override
-//    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, float velocityX, float velocityY) {
-//        if (target.getTop() == calendarLineHeight * 2 ||
-//                target.getTop() == calendarLineHeight * 7) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-//    }
+    @Override
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, float velocityX, float velocityY) {
+        return !(target.getTop() == calendarLineHeight * 2 ||
+                target.getTop() == calendarLineHeight * 7);
+    }
 
     // 切换星期模式
     private void setWeekMode(final MaterialCalendarView calendarView, final CalendarScrollBehavior listBehavior) {
