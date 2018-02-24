@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -15,7 +16,7 @@ import com.southernbox.nestedscrollcalendar.helper.ViewOffsetBehavior;
 import java.util.Calendar;
 
 /**
- * Created by nanquan on 2018/1/19.
+ * Created by SouthernBox on 2018/1/19.
  */
 
 public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
@@ -33,15 +34,10 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
-//    @Override
-//    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, float velocityX, float velocityY) {
-//        return true;
-//    }
-
     @Override
-    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
+    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull final MaterialCalendarView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
-
+        Log.d("666", "start");
         if (calendarMode == CalendarMode.MONTHS) {
             // 移动头部
             if (calendarLineHeight == 0) {
@@ -63,13 +59,56 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     consumed[1] = dy;
                 }
                 if (listOffset == listMinOffset) {
-                    setWeekMode(child, listBehavior);
+                    child.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            setWeekMode(child, listBehavior);
+                        }
+                    }, 100);
                 }
             }
-        } else if (dy < 0) {
+        } else if (dy <= 0) {
             setMonthMode(child);
         }
     }
+
+//    @Override
+//    public void onStopNestedScroll(@NonNull final CoordinatorLayout coordinatorLayout, @NonNull final MaterialCalendarView child, @NonNull final View target, int type) {
+//        super.onStopNestedScroll(coordinatorLayout, child, target, type);
+//        if (target.getTop() == calendarLineHeight * 2 ||
+//                target.getTop() == calendarLineHeight * 7) {
+//            return;
+//        }
+//        Log.d("666", "stop");
+//        if (calendarMode == CalendarMode.MONTHS) {
+//            final Scroller scroller = new Scroller(coordinatorLayout.getContext());
+//            //设置scroller的滚动偏移量
+//            scroller.startScroll(0, child.getTop(), 0, 0 - child.getTop(), 500);
+//            ViewCompat.postOnAnimation(child, new Runnable() {
+//                @Override
+//                public void run() {
+//                    //返回值为boolean，true说明滚动尚未完成，false说明滚动已经完成。
+//                    // 这是一个很重要的方法，通常放在View.computeScroll()中，用来判断是否滚动是否结束。
+//                    if (scroller.computeScrollOffset()) {
+//                        int delta = scroller.getCurrY();
+//                        Log.d("666666666666", scroller.getCurrY() + "");
+//                        coordinatorLayout.onNestedPreScroll(target, 0, delta, new int[2]);
+//                        ViewCompat.postOnAnimation(child, this);
+//                    }
+//                }
+//            });
+//        }
+//    }
+
+//    @Override
+//    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, float velocityX, float velocityY) {
+//        if (target.getTop() == calendarLineHeight * 2 ||
+//                target.getTop() == calendarLineHeight * 7) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 
     // 切换星期模式
     private void setWeekMode(final MaterialCalendarView calendarView, final CalendarScrollBehavior listBehavior) {

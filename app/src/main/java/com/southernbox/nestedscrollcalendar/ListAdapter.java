@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by nanquan on 2018/1/18.
+ * Created by SouthernBox on 2018/1/18.
  */
 
 public class ListAdapter extends RecyclerView.Adapter {

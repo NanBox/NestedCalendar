@@ -14,7 +14,7 @@ import java.util.Locale;
 import static java.util.Calendar.DATE;
 
 /**
- * Created by nanquan on 2018/1/23.
+ * Created by SouthernBox on 2018/1/23.
  */
 
 public class WeekTitleView extends ViewGroup {

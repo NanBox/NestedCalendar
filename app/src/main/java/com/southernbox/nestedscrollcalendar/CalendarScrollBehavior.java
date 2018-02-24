@@ -1,6 +1,7 @@
 package com.southernbox.nestedscrollcalendar;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -12,7 +13,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import java.util.List;
 
 /**
- * Created by nanquan on 2018/1/19.
+ * Created by SouthernBox on 2018/1/19.
  */
 
 public class CalendarScrollBehavior extends ViewOffsetBehavior<RecyclerView> {
@@ -42,5 +43,10 @@ public class CalendarScrollBehavior extends ViewOffsetBehavior<RecyclerView> {
         }
         child.setTop(calendarHeight);
         child.setBottom(child.getBottom() + calendarHeight);
+    }
+
+    @Override
+    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull RecyclerView child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
+        return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes, type);
     }
 }
