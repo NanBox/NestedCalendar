@@ -1,4 +1,4 @@
-package com.southernbox.nestedscrollcalendar;
+package com.southernbox.nestedcalendar.behavior;
 
 import android.content.Context;
 import android.os.Handler;
@@ -14,7 +14,7 @@ import android.widget.Scroller;
 
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.southernbox.nestedscrollcalendar.helper.ViewOffsetBehavior;
+import com.southernbox.nestedcalendar.helper.ViewOffsetBehavior;
 
 import java.util.Calendar;
 

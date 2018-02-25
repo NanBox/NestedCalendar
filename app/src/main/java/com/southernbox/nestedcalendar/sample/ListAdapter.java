@@ -1,14 +1,14 @@
-package com.southernbox.nestedscrollcalendar;
+package com.southernbox.nestedcalendar.sample;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
+ * 列表适配器
  * Created by SouthernBox on 2018/1/18.
  */
 
@@ -30,7 +30,7 @@ public class ListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Holder mHolder = (Holder) holder;
-        mHolder.textView.setText(position+"");
+        mHolder.textView.setText(position + "");
     }
 
     @Override

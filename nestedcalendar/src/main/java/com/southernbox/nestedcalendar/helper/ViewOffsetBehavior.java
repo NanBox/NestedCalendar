@@ -1,4 +1,4 @@
-package com.southernbox.nestedscrollcalendar.helper;
+package com.southernbox.nestedcalendar.helper;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;

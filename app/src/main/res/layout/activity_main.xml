@@ -8,18 +8,18 @@
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="com.southernbox.nestedscrollcalendar.CalendarBehavior"
+        app:layout_behavior="com.southernbox.nestedcalendar.behavior.CalendarBehavior"
         app:mcv_showOtherDates="all" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
         android:background="@android:color/darker_gray"
-        app:layout_behavior="com.southernbox.nestedscrollcalendar.CalendarScrollBehavior" />
+        app:layout_behavior="com.southernbox.nestedcalendar.behavior.CalendarScrollBehavior" />
 
-    <com.southernbox.nestedscrollcalendar.WeekTitleView
+    <com.southernbox.nestedcalendar.view.WeekTitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fafafa" />

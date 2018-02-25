@@ -1,15 +1,14 @@
-package com.southernbox.nestedscrollcalendar;
+package com.southernbox.nestedcalendar.behavior;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.southernbox.nestedscrollcalendar.helper.ViewOffsetBehavior;
+import com.southernbox.nestedcalendar.helper.ViewOffsetBehavior;
 
 import java.util.List;
 
@@ -45,21 +44,5 @@ public class CalendarScrollBehavior extends ViewOffsetBehavior<RecyclerView> {
         }
         child.setTop(calendarHeight);
         child.setBottom(child.getBottom() + calendarHeight);
-    }
-
-
-    @Override
-    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull RecyclerView child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
-        return super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes, type);
-    }
-
-    @Override
-    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull RecyclerView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
-    }
-
-    @Override
-    public void onStopNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull RecyclerView child, @NonNull View target, int type) {
-        super.onStopNestedScroll(coordinatorLayout, child, target, type);
     }
 }

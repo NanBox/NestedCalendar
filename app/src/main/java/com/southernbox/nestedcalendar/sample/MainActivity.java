@@ -1,4 +1,4 @@
-package com.southernbox.nestedscrollcalendar;
+package com.southernbox.nestedcalendar.sample;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.southernbox.nestedcalendar.behavior.CalendarBehavior;
 
 import java.util.Calendar;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        RecyclerView rv = findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setAdapter(new ListAdapter(this));
     }

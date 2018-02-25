@@ -1,4 +1,4 @@
-package com.southernbox.nestedscrollcalendar;
+package com.southernbox.nestedcalendar;
 
 import org.junit.Test;
 

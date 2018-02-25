@@ -1,4 +1,4 @@
-package com.southernbox.nestedscrollcalendar;
+package com.southernbox.nestedcalendar.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -7,6 +7,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.southernbox.nestedcalendar.R;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -37,10 +39,10 @@ public class WeekTitleView extends ViewGroup {
     public WeekTitleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         calendar = Calendar.getInstance();
-        TypedArray a = context
+        TypedArray typedArray = context
                 .getTheme()
                 .obtainStyledAttributes(attrs, R.styleable.WeekTitleView, 0, 0);
-        textSize = a.getLayoutDimension(R.styleable.WeekTitleView_text_size, 12);
+        textSize = typedArray.getLayoutDimension(R.styleable.WeekTitleView_text_size, 12);
         addView();
     }
 

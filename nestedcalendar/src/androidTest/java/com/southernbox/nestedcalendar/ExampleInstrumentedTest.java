@@ -1,4 +1,4 @@
-package com.southernbox.nestedscrollcalendar;
+package com.southernbox.nestedcalendar;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.nanquan.calendar", appContext.getPackageName());
+        assertEquals("com.southernbox.nestedcalendar.test", appContext.getPackageName());
     }
 }
