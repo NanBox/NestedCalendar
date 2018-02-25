@@ -31,13 +31,13 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     private CalendarMode calendarMode = CalendarMode.MONTHS;
     private int weekOfMonth = Calendar.getInstance().get(Calendar.WEEK_OF_MONTH);
 
-    private final static int WHAT_WEEK_MODE = 0;
-    private final static int WHAT_MONTH_MODE = 1;
+    private final static int MSG_WEEK_MODE = 0;
+    private final static int MSG_MONTH_MODE = 1;
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-                case WHAT_WEEK_MODE: {
+                case MSG_WEEK_MODE: {
                     if (calendarMode == CalendarMode.WEEKS) {
                         return true;
                     }
@@ -49,7 +49,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     setTopAndBottomOffset(0);
                 }
                 break;
-                case WHAT_MONTH_MODE: {
+                case MSG_MONTH_MODE: {
                     if (calendarMode == CalendarMode.MONTHS) {
                         return true;
                     }
@@ -71,12 +71,21 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     }
 
     @Override
-    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
+    public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout,
+                                       @NonNull MaterialCalendarView child,
+                                       @NonNull View directTargetChild,
+                                       @NonNull View target,
+                                       int axes, int type) {
         return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
     @Override
-    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull final MaterialCalendarView child, @NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
+    public void onNestedPreScroll(@NonNull CoordinatorLayout coordinatorLayout,
+                                  @NonNull final MaterialCalendarView child,
+                                  @NonNull View target,
+                                  int dx, int dy,
+                                  @NonNull int[] consumed,
+                                  int type) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
         if (calendarMode == CalendarMode.MONTHS) {
             // 移动头部
@@ -84,7 +93,8 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                 calendarLineHeight = child.getMeasuredHeight() / 7;
             }
             int headerMinOffset = -calendarLineHeight * (weekOfMonth - 1);
-            int headerOffset = MathUtils.clamp(getTopAndBottomOffset() - dy, headerMinOffset, 0);
+            int headerOffset = MathUtils.clamp(
+                    getTopAndBottomOffset() - dy, headerMinOffset, 0);
             setTopAndBottomOffset(headerOffset);
 
             // 移动列表
@@ -93,31 +103,35 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
             if (behavior instanceof CalendarScrollBehavior) {
                 final CalendarScrollBehavior listBehavior = (CalendarScrollBehavior) behavior;
                 int listMinOffset = -calendarLineHeight * 5;
-                int listOffset = MathUtils.clamp(listBehavior.getTopAndBottomOffset() - dy, listMinOffset, 0);
+                int listOffset = MathUtils.clamp(
+                        listBehavior.getTopAndBottomOffset() - dy, listMinOffset, 0);
                 listBehavior.setTopAndBottomOffset(listOffset);
                 if (listOffset > listMinOffset && listOffset < 0) {
                     consumed[1] = dy;
                 }
                 if (listOffset == listMinOffset) {
                     Message message = new Message();
-                    message.what = WHAT_WEEK_MODE;
+                    message.what = MSG_WEEK_MODE;
                     message.obj = child;
                     mHandler.sendMessageDelayed(message, 200);
-                }else {
-                    mHandler.removeMessages(WHAT_WEEK_MODE);
+                } else {
+                    mHandler.removeMessages(MSG_WEEK_MODE);
                 }
             }
         } else if (dy <= 0) {
-            mHandler.removeMessages(WHAT_WEEK_MODE);
+            mHandler.removeMessages(MSG_WEEK_MODE);
             Message message = new Message();
-            message.what = WHAT_MONTH_MODE;
+            message.what = MSG_MONTH_MODE;
             message.obj = child;
             mHandler.sendMessage(message);
         }
     }
 
     @Override
-    public void onStopNestedScroll(@NonNull final CoordinatorLayout coordinatorLayout, @NonNull final MaterialCalendarView child, @NonNull final View target, int type) {
+    public void onStopNestedScroll(@NonNull final CoordinatorLayout coordinatorLayout,
+                                   @NonNull final MaterialCalendarView child,
+                                   @NonNull final View target,
+                                   int type) {
         super.onStopNestedScroll(coordinatorLayout, child, target, type);
         if (target.getTop() == calendarLineHeight * 2 ||
                 target.getTop() == calendarLineHeight * 7) {
@@ -144,7 +158,10 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     }
 
     @Override
-    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout, @NonNull MaterialCalendarView child, @NonNull View target, float velocityX, float velocityY) {
+    public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout,
+                                    @NonNull MaterialCalendarView child,
+                                    @NonNull View target,
+                                    float velocityX, float velocityY) {
         return !(target.getTop() == calendarLineHeight * 2 ||
                 target.getTop() == calendarLineHeight * 7);
     }
