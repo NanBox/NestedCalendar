@@ -152,26 +152,30 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
             //设置scroller的滚动偏移量
             int scrollerDy = calendarLineHeight * 4 - target.getTop();
             if (Math.abs(dy) < 5) {
-                scroller.startScroll(0, target.getTop(), 0, scrollerDy, 500);
+                scroller.startScroll(
+                        0, target.getTop(), 0, scrollerDy, 500);
             } else {
                 if (dy > 0) {
                     // 滚动到周模式
-                    scroller.startScroll(0, target.getTop(), 0, Math.abs(scrollerDy), 500);
+                    scroller.startScroll(
+                            0, target.getTop(), 0, Math.abs(scrollerDy), 500);
                 } else {
                     // 滚动到月模式
-                    scroller.startScroll(0, target.getTop(), 0, -Math.abs(scrollerDy), 500);
+                    scroller.startScroll(
+                            0, target.getTop(), 0, -Math.abs(scrollerDy), 500);
                 }
             }
             ViewCompat.postOnAnimation(child, new Runnable() {
                 @Override
                 public void run() {
-                    // 返回值为boolean，true说明滚动尚未完成，false说明滚动已经完成。
-                    // 这是一个很重要的方法，通常放在View.computeScroll()中，用来判断是否滚动是否结束。
-                    if (scroller.computeScrollOffset()) {
+                    if (scroller.computeScrollOffset() &&
+                            target instanceof RecyclerView) {
                         canAutoScroll = false;
+                        RecyclerView recyclerView = (RecyclerView) target;
                         int delta = scroller.getCurrY() - target.getTop();
-                        ((RecyclerView) target).startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
-                        ((RecyclerView) target).dispatchNestedPreScroll(0, delta, new int[2], new int[2], TYPE_TOUCH);
+                        recyclerView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
+                        recyclerView.dispatchNestedPreScroll(
+                                0, delta, new int[2], new int[2], TYPE_TOUCH);
                         ViewCompat.postOnAnimation(child, this);
                     } else {
                         canAutoScroll = true;
