@@ -31,6 +31,9 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     private CalendarMode calendarMode = CalendarMode.MONTHS;
     private int weekOfMonth = Calendar.getInstance().get(Calendar.WEEK_OF_MONTH);
 
+    private int dy;
+    private boolean canAutoScroll = true;
+
     private final static int MSG_WEEK_MODE = 0;
     private final static int MSG_MONTH_MODE = 1;
     private Handler mHandler = new Handler(new Handler.Callback() {
@@ -87,8 +90,11 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                   @NonNull int[] consumed,
                                   int type) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
+        if (target.canScrollVertically(-1)) {
+            return;
+        }
         if (calendarMode == CalendarMode.MONTHS) {
-            // 移动头部
+            // 移动日历
             if (calendarLineHeight == 0) {
                 calendarLineHeight = child.getMeasuredHeight() / 7;
             }
@@ -125,6 +131,9 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
             message.obj = child;
             mHandler.sendMessage(message);
         }
+
+        this.dy = dy;
+
     }
 
     @Override
@@ -133,24 +142,39 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                    @NonNull final View target,
                                    int type) {
         super.onStopNestedScroll(coordinatorLayout, child, target, type);
-        if (target.getTop() == calendarLineHeight * 2 ||
+        if (!canAutoScroll ||
+                target.getTop() == calendarLineHeight * 2 ||
                 target.getTop() == calendarLineHeight * 7) {
             return;
         }
         if (calendarMode == CalendarMode.MONTHS) {
             final Scroller scroller = new Scroller(coordinatorLayout.getContext());
             //设置scroller的滚动偏移量
-            scroller.startScroll(0, target.getTop(), 0, calendarLineHeight * 4 - target.getTop(), 500);
+            int scrollerDy = calendarLineHeight * 4 - target.getTop();
+            if (Math.abs(dy) < 5) {
+                scroller.startScroll(0, target.getTop(), 0, scrollerDy, 500);
+            } else {
+                if (dy > 0) {
+                    // 滚动到周模式
+                    scroller.startScroll(0, target.getTop(), 0, Math.abs(scrollerDy), 500);
+                } else {
+                    // 滚动到月模式
+                    scroller.startScroll(0, target.getTop(), 0, -Math.abs(scrollerDy), 500);
+                }
+            }
             ViewCompat.postOnAnimation(child, new Runnable() {
                 @Override
                 public void run() {
                     // 返回值为boolean，true说明滚动尚未完成，false说明滚动已经完成。
                     // 这是一个很重要的方法，通常放在View.computeScroll()中，用来判断是否滚动是否结束。
                     if (scroller.computeScrollOffset()) {
+                        canAutoScroll = false;
                         int delta = scroller.getCurrY() - target.getTop();
                         ((RecyclerView) target).startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
                         ((RecyclerView) target).dispatchNestedPreScroll(0, delta, new int[2], new int[2], TYPE_TOUCH);
                         ViewCompat.postOnAnimation(child, this);
+                    } else {
+                        canAutoScroll = true;
                     }
                 }
             });
@@ -169,6 +193,5 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     public void setWeekOfMonth(int weekOfMonth) {
         this.weekOfMonth = weekOfMonth;
     }
-
 
 }
