@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,8 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
-        android:background="@android:color/darker_gray"
-        app:layout_behavior="com.southernbox.nestedcalendar.behavior.CalendarScrollBehavior" />
+        android:background="@color/color_dd"
+        app:layout_behavior="com.southernbox.nestedcalendar.behavior.CalendarScrollBehavior"
+        tools:listitem="@layout/item_list" />
 
     <com.southernbox.nestedcalendar.view.WeekTitleView
         android:layout_width="match_parent"
