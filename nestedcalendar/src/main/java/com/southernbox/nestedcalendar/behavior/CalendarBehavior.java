@@ -36,6 +36,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
 
     private final static int MSG_WEEK_MODE = 0;
     private final static int MSG_MONTH_MODE = 1;
+
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
@@ -44,11 +45,11 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     if (calendarMode == CalendarMode.WEEKS) {
                         return true;
                     }
+                    calendarMode = CalendarMode.WEEKS;
                     MaterialCalendarView calendarView = (MaterialCalendarView) msg.obj;
                     calendarView.state().edit()
                             .setCalendarDisplayMode(CalendarMode.WEEKS)
                             .commit();
-                    calendarMode = CalendarMode.WEEKS;
                     setTopAndBottomOffset(0);
                 }
                 break;
@@ -56,11 +57,11 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     if (calendarMode == CalendarMode.MONTHS) {
                         return true;
                     }
+                    calendarMode = CalendarMode.MONTHS;
                     MaterialCalendarView calendarView = (MaterialCalendarView) msg.obj;
                     calendarView.state().edit()
                             .setCalendarDisplayMode(CalendarMode.MONTHS)
                             .commit();
-                    calendarMode = CalendarMode.MONTHS;
                     setTopAndBottomOffset(-calendarLineHeight * (weekOfMonth - 1));
                 }
                 break;
@@ -198,4 +199,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         this.weekOfMonth = weekOfMonth;
     }
 
+    public CalendarMode getCalendarMode() {
+        return calendarMode;
+    }
 }

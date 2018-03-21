@@ -7,10 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.southernbox.nestedcalendar.behavior.CalendarBehavior;
 
 import java.util.ArrayList;
@@ -20,39 +23,73 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MaterialCalendarView calendarView;
+    private CalendarBehavior calendarBehavior;
+    private int dayOfWeek;
+    private int dayOfMonth;
+    private CalendarMode currentCalendarMode = CalendarMode.MONTHS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initCalendarView();
         initRecyclerView();
     }
 
     private void initCalendarView() {
-        calendarView = findViewById(R.id.calendar);
+        MaterialCalendarView calendarView = findViewById(R.id.calendar);
         calendarView.setTopbarVisible(false);
-
+        CoordinatorLayout.Behavior behavior =
+                ((CoordinatorLayout.LayoutParams) calendarView.getLayoutParams()).getBehavior();
+        if (behavior instanceof CalendarBehavior) {
+            calendarBehavior = (CalendarBehavior) behavior;
+        }
         Calendar calendar = Calendar.getInstance();
-        calendarView.setSelectedDate(calendar.getTime());
+        calendarView.setSelectedDate(Calendar.getInstance());
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget,
-                                       @NonNull CalendarDay date,
-                                       boolean selected) {
-                final CoordinatorLayout.Behavior behavior =
-                        ((CoordinatorLayout.LayoutParams) calendarView.getLayoutParams()).getBehavior();
-                if (behavior instanceof CalendarBehavior) {
-                    final CalendarBehavior calendarBehavior = (CalendarBehavior) behavior;
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(date.getDate());
+        if (calendarBehavior != null) {
+            calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+                @Override
+                public void onDateSelected(@NonNull MaterialCalendarView widget,
+                                           @NonNull CalendarDay date,
+                                           boolean selected) {
+                    Calendar calendar = date.getCalendar();
                     calendarBehavior.setWeekOfMonth(calendar.get(Calendar.WEEK_OF_MONTH));
+                    if (selected) {
+                        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                    }
                 }
-            }
-        });
+            });
+            calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
+                @Override
+                public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                    Calendar calendar = Calendar.getInstance();
+                    date.copyTo(calendar);
+                    Log.d("666", calendar.get(Calendar.MONTH) + "");
+                    Log.d("666", calendar.get(Calendar.DAY_OF_MONTH) + "");
+                    if (currentCalendarMode != calendarBehavior.getCalendarMode()) {
+                        currentCalendarMode = calendarBehavior.getCalendarMode();
+                        return;
+                    }
+                    if (calendarBehavior.getCalendarMode() == CalendarMode.WEEKS) {
+                        calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek - 1);
+                    } else {
+                        int monthDays = calendar.getActualMaximum(Calendar.DATE);
+                        if (dayOfMonth > monthDays) {
+                            calendar.add(Calendar.DAY_OF_MONTH, monthDays - 1);
+                        } else {
+                            calendar.add(Calendar.DAY_OF_MONTH, dayOfMonth - 1);
+                        }
+                    }
+                    widget.setSelectedDate(calendar);
+                    calendarBehavior.setWeekOfMonth(calendar.get(Calendar.WEEK_OF_MONTH));
+                    setTitle((calendar.get(Calendar.MONTH) + 1) + "月");
+                }
+            });
+        }
     }
 
     private void initRecyclerView() {
@@ -62,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
         List<String> mList = new ArrayList<>();
         Collections.addAll(mList, names);
         rv.setAdapter(new ListAdapter(this, mList));
-        rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        rv.addItemDecoration(itemDecoration);
     }
 
 }
