@@ -16,8 +16,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
-        android:background="@color/color_dd"
+        android:layout_marginBottom="110dp"
+        android:background="@color/color_ee"
         app:layout_behavior="com.southernbox.nestedcalendar.behavior.CalendarScrollBehavior"
         tools:listitem="@layout/item_list" />
 

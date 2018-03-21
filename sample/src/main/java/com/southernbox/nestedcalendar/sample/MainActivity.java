@@ -13,11 +13,14 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.southernbox.nestedcalendar.behavior.CalendarBehavior;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    MaterialCalendarView calendarView;
+    private MaterialCalendarView calendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+            public void onDateSelected(@NonNull MaterialCalendarView widget,
+                                       @NonNull CalendarDay date,
+                                       boolean selected) {
                 final CoordinatorLayout.Behavior behavior =
                         ((CoordinatorLayout.LayoutParams) calendarView.getLayoutParams()).getBehavior();
                 if (behavior instanceof CalendarBehavior) {
@@ -53,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
     private void initRecyclerView() {
         RecyclerView rv = findViewById(R.id.recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setAdapter(new ListAdapter(this));
+        String[] names = getResources().getStringArray(R.array.query_suggestions);
+        List<String> mList = new ArrayList<>();
+        Collections.addAll(mList, names);
+        rv.setAdapter(new ListAdapter(this, mList));
         rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 

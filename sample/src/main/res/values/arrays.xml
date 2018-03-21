@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="query_suggestions">
+        <item>加内特</item>
+        <item>韦德</item>
+        <item>詹姆斯</item>
+        <item>安东尼</item>
+        <item>库里</item>
+        <item>杜兰特</item>
+        <item>威斯布鲁克</item>
+        <item>保罗</item>
+        <item>加索尔</item>
+        <item>隆多</item>
+        <item>诺维斯基</item>
+        <item>格里芬</item>
+        <item>波什</item>
+        <item>罗斯</item>
+        <item>伊戈达拉</item>
+        <item>哈登</item>
+        <item>戴维斯</item>
+        <item>霍华德</item>
+        <item>格里芬</item>
+        <item>诺维斯基</item>
+        <item>欧文</item>
+        <item>邓肯</item>
+        <item>吉诺比利</item>
+        <item>帕克</item>
+        <item>皮尔斯</item>
+        <item>雷阿伦</item>
+        <item>科比</item>
+        <item>乔丹</item>
+        <item>艾弗森</item>
+        <item>奥尼尔</item>
+        <item>麦格雷迪</item>
+        <item>哈达威</item>
+        <item>纳什</item>
+        <item>姚明</item>
+        <item>弗朗西斯</item>
+        <item>韦伯</item>
+    </string-array>
+</resources>
