@@ -42,27 +42,29 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_WEEK_MODE: {
-                    if (calendarMode == CalendarMode.WEEKS) {
+                    if (calendarMode != CalendarMode.MONTHS) {
                         return true;
                     }
-                    calendarMode = CalendarMode.WEEKS;
+                    calendarMode = null;
                     MaterialCalendarView calendarView = (MaterialCalendarView) msg.obj;
                     calendarView.state().edit()
                             .setCalendarDisplayMode(CalendarMode.WEEKS)
                             .commit();
                     setTopAndBottomOffset(0);
+                    calendarMode = CalendarMode.WEEKS;
                 }
                 break;
                 case MSG_MONTH_MODE: {
-                    if (calendarMode == CalendarMode.MONTHS) {
+                    if (calendarMode != CalendarMode.WEEKS) {
                         return true;
                     }
-                    calendarMode = CalendarMode.MONTHS;
+                    calendarMode = null;
                     MaterialCalendarView calendarView = (MaterialCalendarView) msg.obj;
                     calendarView.state().edit()
                             .setCalendarDisplayMode(CalendarMode.MONTHS)
                             .commit();
                     setTopAndBottomOffset(-calendarLineHeight * (weekOfMonth - 1));
+                    calendarMode = CalendarMode.MONTHS;
                 }
                 break;
             }
@@ -91,7 +93,8 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                   @NonNull int[] consumed,
                                   int type) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
-        if (target.canScrollVertically(-1)) {
+        if (target.canScrollVertically(-1) ||
+                calendarMode == null) {
             return;
         }
         if (calendarMode == CalendarMode.MONTHS) {
@@ -145,7 +148,8 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         super.onStopNestedScroll(coordinatorLayout, child, target, type);
         if (!canAutoScroll ||
                 target.getTop() == calendarLineHeight * 2 ||
-                target.getTop() == calendarLineHeight * 7) {
+                target.getTop() == calendarLineHeight * 7 ||
+                calendarMode == null) {
             return;
         }
         if (calendarMode == CalendarMode.MONTHS) {

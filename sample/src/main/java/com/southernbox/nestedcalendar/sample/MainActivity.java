@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -26,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private CalendarBehavior calendarBehavior;
     private int dayOfWeek;
     private int dayOfMonth;
-    private CalendarMode currentCalendarMode = CalendarMode.MONTHS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,23 +64,19 @@ public class MainActivity extends AppCompatActivity {
             calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
                 @Override
                 public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
-                    Calendar calendar = Calendar.getInstance();
-                    date.copyTo(calendar);
-                    Log.d("666", calendar.get(Calendar.MONTH) + "");
-                    Log.d("666", calendar.get(Calendar.DAY_OF_MONTH) + "");
-                    if (currentCalendarMode != calendarBehavior.getCalendarMode()) {
-                        currentCalendarMode = calendarBehavior.getCalendarMode();
+                    if (calendarBehavior.getCalendarMode() == null) {
                         return;
                     }
+                    Calendar calendar = Calendar.getInstance();
+                    date.copyTo(calendar);
                     if (calendarBehavior.getCalendarMode() == CalendarMode.WEEKS) {
                         calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek - 1);
                     } else {
                         int monthDays = calendar.getActualMaximum(Calendar.DATE);
                         if (dayOfMonth > monthDays) {
-                            calendar.add(Calendar.DAY_OF_MONTH, monthDays - 1);
-                        } else {
-                            calendar.add(Calendar.DAY_OF_MONTH, dayOfMonth - 1);
+                            dayOfMonth = monthDays;
                         }
+                        calendar.add(Calendar.DAY_OF_MONTH, dayOfMonth - 1);
                     }
                     widget.setSelectedDate(calendar);
                     calendarBehavior.setWeekOfMonth(calendar.get(Calendar.WEEK_OF_MONTH));
