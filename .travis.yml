@@ -1,0 +1,17 @@
+language: android
+
+jdk:
+  - oraclejdk8
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - android-27
+    - build-tools-27.1.0
+
+before_script:
+  - chmod +x gradlew
+  
+script:
+  - ./gradlew assembleRelease
