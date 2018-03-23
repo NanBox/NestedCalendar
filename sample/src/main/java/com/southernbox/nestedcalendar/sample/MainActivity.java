@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         calendarView.setSelectedDate(Calendar.getInstance());
         dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        setTitle((calendar.get(Calendar.MONTH) + 1) + "月");
 
         if (calendarBehavior != null) {
             calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
