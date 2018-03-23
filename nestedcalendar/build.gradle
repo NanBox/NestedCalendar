@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 27
@@ -25,4 +26,12 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:design:27.1.0'
     api 'com.prolificinteractive:material-calendarview:1.4.3'
+}
+
+publish {
+    userOrg = 'southernbox'
+    groupId = 'com.southernbox'
+    artifactId = 'NestedCalendar'
+    publishVersion = '1.0.0'
+    website = 'https://github.com/SouthernBox/NestedCalendar'
 }
