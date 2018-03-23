@@ -1,7 +1,6 @@
 package com.southernbox.nestedcalendar.behavior;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;

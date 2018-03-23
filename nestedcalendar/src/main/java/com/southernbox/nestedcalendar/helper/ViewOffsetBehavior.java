@@ -7,8 +7,6 @@ import android.view.View;
 
 /**
  * Copy from Android design library
- * <p>
- * Behavior will automatically sets up a {@link android.support.design.widget.ViewOffsetHelper} on a {@link View}.
  */
 public class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
 
