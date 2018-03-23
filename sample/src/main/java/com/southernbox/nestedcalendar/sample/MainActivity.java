@@ -71,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
                     date.copyTo(calendar);
                     if (calendarBehavior.getCalendarMode() == CalendarMode.WEEKS) {
                         calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek - 1);
+                        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
                     } else {
                         int monthDays = calendar.getActualMaximum(Calendar.DATE);
                         if (dayOfMonth > monthDays) {
                             dayOfMonth = monthDays;
                         }
                         calendar.add(Calendar.DAY_OF_MONTH, dayOfMonth - 1);
+                        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                     }
                     widget.setSelectedDate(calendar);
                     calendarBehavior.setWeekOfMonth(calendar.get(Calendar.WEEK_OF_MONTH));
