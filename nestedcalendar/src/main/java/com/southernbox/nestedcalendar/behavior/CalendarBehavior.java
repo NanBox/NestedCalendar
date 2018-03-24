@@ -1,8 +1,6 @@
 package com.southernbox.nestedcalendar.behavior;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.math.MathUtils;
@@ -34,44 +32,6 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     private int dy;
     private boolean canAutoScroll = true;
 
-    private final static int MSG_WEEK_MODE = 0;
-    private final static int MSG_MONTH_MODE = 1;
-
-    private Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_WEEK_MODE: {
-                    if (calendarMode != CalendarMode.MONTHS) {
-                        return true;
-                    }
-                    calendarMode = null;
-                    MaterialCalendarView calendarView = (MaterialCalendarView) msg.obj;
-                    calendarView.state().edit()
-                            .setCalendarDisplayMode(CalendarMode.WEEKS)
-                            .commit();
-                    setTopAndBottomOffset(0);
-                    calendarMode = CalendarMode.WEEKS;
-                }
-                break;
-                case MSG_MONTH_MODE: {
-                    if (calendarMode != CalendarMode.WEEKS) {
-                        return true;
-                    }
-                    calendarMode = null;
-                    MaterialCalendarView calendarView = (MaterialCalendarView) msg.obj;
-                    calendarView.state().edit()
-                            .setCalendarDisplayMode(CalendarMode.MONTHS)
-                            .commit();
-                    setTopAndBottomOffset(-calendarLineHeight * (weekOfMonth - 1));
-                    calendarMode = CalendarMode.MONTHS;
-                }
-                break;
-            }
-            return true;
-        }
-    });
-
     public CalendarBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -92,11 +52,11 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                   int dx, int dy,
                                   @NonNull int[] consumed,
                                   int type) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
-        if (target.canScrollVertically(-1) ||
-                calendarMode == null) {
+        if (target.canScrollVertically(-1)) {
             return;
         }
+        this.dy = dy;
+        setMonthMode(child);
         if (calendarMode == CalendarMode.MONTHS) {
             // 移动日历
             if (calendarLineHeight == 0) {
@@ -119,25 +79,8 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                 if (listOffset > listMinOffset && listOffset < 0) {
                     consumed[1] = dy;
                 }
-                if (listOffset == listMinOffset) {
-                    Message message = new Message();
-                    message.what = MSG_WEEK_MODE;
-                    message.obj = child;
-                    mHandler.sendMessageDelayed(message, 200);
-                } else {
-                    mHandler.removeMessages(MSG_WEEK_MODE);
-                }
             }
-        } else if (dy <= 0) {
-            mHandler.removeMessages(MSG_WEEK_MODE);
-            Message message = new Message();
-            message.what = MSG_MONTH_MODE;
-            message.obj = child;
-            mHandler.sendMessage(message);
         }
-
-        this.dy = dy;
-
     }
 
     @Override
@@ -145,11 +88,17 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                    @NonNull final MaterialCalendarView child,
                                    @NonNull final View target,
                                    int type) {
-        super.onStopNestedScroll(coordinatorLayout, child, target, type);
-        if (!canAutoScroll ||
-                target.getTop() == calendarLineHeight * 2 ||
-                target.getTop() == calendarLineHeight * 7 ||
-                calendarMode == null) {
+        if (calendarLineHeight == 0) {
+            return;
+        }
+        if (target.getTop() == calendarLineHeight * 2) {
+            setWeekMode(child);
+            return;
+        } else if (target.getTop() == calendarLineHeight * 7) {
+            setMonthMode(child);
+            return;
+        }
+        if (!canAutoScroll) {
             return;
         }
         if (calendarMode == CalendarMode.MONTHS) {
@@ -184,6 +133,12 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                         ViewCompat.postOnAnimation(child, this);
                     } else {
                         canAutoScroll = true;
+                        // 滚动完成
+                        if (target.getTop() == calendarLineHeight * 2) {
+                            setWeekMode(child);
+                        } else if (target.getTop() == calendarLineHeight * 7) {
+                            setMonthMode(child);
+                        }
                     }
                 }
             });
@@ -197,6 +152,30 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                     float velocityX, float velocityY) {
         return !(target.getTop() == calendarLineHeight * 2 ||
                 target.getTop() == calendarLineHeight * 7);
+    }
+
+    private void setMonthMode(MaterialCalendarView calendarView) {
+        if (calendarMode != CalendarMode.WEEKS) {
+            return;
+        }
+        calendarMode = null;
+        calendarView.state().edit()
+                .setCalendarDisplayMode(CalendarMode.MONTHS)
+                .commit();
+        setTopAndBottomOffset(-calendarLineHeight * (weekOfMonth - 1));
+        calendarMode = CalendarMode.MONTHS;
+    }
+
+    private void setWeekMode(MaterialCalendarView calendarView) {
+        if (calendarMode != CalendarMode.MONTHS) {
+            return;
+        }
+        calendarMode = null;
+        calendarView.state().edit()
+                .setCalendarDisplayMode(CalendarMode.WEEKS)
+                .commit();
+        setTopAndBottomOffset(0);
+        calendarMode = CalendarMode.WEEKS;
     }
 
     public void setWeekOfMonth(int weekOfMonth) {
