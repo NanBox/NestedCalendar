@@ -104,33 +104,36 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         if (calendarMode == CalendarMode.MONTHS) {
             final Scroller scroller = new Scroller(coordinatorLayout.getContext());
             int duration = 500;
-            if (Math.abs(dy) < 5) {
-                if (target.getTop() > calendarLineHeight * 4) {
-                    scroller.startScroll(
-                            0, target.getTop(),
-                            0, calendarLineHeight * 7 - target.getTop(),
-                            duration);
-                } else {
-                    scroller.startScroll(
-                            0, target.getTop(),
-                            0, calendarLineHeight * 2 - target.getTop(),
-                            duration);
-                }
-            } else {
-                if (dy > 0) {
-                    // 滚动到周模式
-                    scroller.startScroll(
-                            0, target.getTop(),
-                            0, calendarLineHeight * 2 - target.getTop(),
-                            duration);
-                } else {
-                    // 滚动到月模式
-                    scroller.startScroll(
-                            0, target.getTop(),
-                            0, calendarLineHeight * 7 - target.getTop(),
-                            duration);
-                }
-            }
+            scroller.fling(0,target.getTop(),
+                    0,velocityY,
+                    calendarLineHeight * 2,calendarLineHeight * 7);
+//            if (Math.abs(dy) < 5) {
+//                if (target.getTop() > calendarLineHeight * 4) {
+//                    scroller.startScroll(
+//                            0, target.getTop(),
+//                            0, calendarLineHeight * 7 - target.getTop(),
+//                            duration);
+//                } else {
+//                    scroller.startScroll(
+//                            0, target.getTop(),
+//                            0, calendarLineHeight * 2 - target.getTop(),
+//                            duration);
+//                }
+//            } else {
+//                if (dy > 0) {
+//                    // 滚动到周模式
+//                    scroller.startScroll(
+//                            0, target.getTop(),
+//                            0, calendarLineHeight * 2 - target.getTop(),
+//                            duration);
+//                } else {
+//                    // 滚动到月模式
+//                    scroller.startScroll(
+//                            0, target.getTop(),
+//                            0, calendarLineHeight * 7 - target.getTop(),
+//                            duration);
+//                }
+//            }
             ViewCompat.postOnAnimation(child, new Runnable() {
                 @Override
                 public void run() {
@@ -157,11 +160,14 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         }
     }
 
+    int velocityY;
+
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout,
                                     @NonNull MaterialCalendarView child,
                                     @NonNull View target,
                                     float velocityX, float velocityY) {
+        this.velocityY = (int)velocityY;
         return !(target.getTop() == calendarLineHeight * 2 ||
                 target.getTop() == calendarLineHeight * 7);
     }
