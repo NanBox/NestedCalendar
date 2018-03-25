@@ -9,7 +9,7 @@
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="com.southernbox.nestedcalendar.behavior.CalendarBehavior"
+        app:layout_behavior="@string/calendar_behavior"
         app:mcv_showOtherDates="all" />
 
     <android.support.v7.widget.RecyclerView
@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="110dp"
         android:background="@color/color_ee"
-        app:layout_behavior="com.southernbox.nestedcalendar.behavior.CalendarScrollBehavior"
+        app:layout_behavior="@string/calendar_scrolling_behavior"
         tools:listitem="@layout/item_list" />
 
     <com.southernbox.nestedcalendar.view.WeekTitleView
