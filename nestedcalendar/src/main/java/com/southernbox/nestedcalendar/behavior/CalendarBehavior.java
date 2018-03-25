@@ -25,11 +25,10 @@ import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
 
 public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
 
-    private int calendarLineHeight;
     private CalendarMode calendarMode = CalendarMode.MONTHS;
     private int weekOfMonth = Calendar.getInstance().get(Calendar.WEEK_OF_MONTH);
-
-    private int dy;
+    private int calendarLineHeight;
+    private int velocityY;
     private boolean canAutoScroll = true;
 
     public CalendarBehavior(Context context, AttributeSet attrs) {
@@ -55,7 +54,6 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         if (target.canScrollVertically(-1)) {
             return;
         }
-        this.dy = dy;
         setMonthMode(child);
         if (calendarMode == CalendarMode.MONTHS) {
             // 移动日历
@@ -103,37 +101,28 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         }
         if (calendarMode == CalendarMode.MONTHS) {
             final Scroller scroller = new Scroller(coordinatorLayout.getContext());
-            int duration = 500;
-            scroller.fling(0,target.getTop(),
-                    0,velocityY,
-                    calendarLineHeight * 2,calendarLineHeight * 7);
-//            if (Math.abs(dy) < 5) {
-//                if (target.getTop() > calendarLineHeight * 4) {
-//                    scroller.startScroll(
-//                            0, target.getTop(),
-//                            0, calendarLineHeight * 7 - target.getTop(),
-//                            duration);
-//                } else {
-//                    scroller.startScroll(
-//                            0, target.getTop(),
-//                            0, calendarLineHeight * 2 - target.getTop(),
-//                            duration);
-//                }
-//            } else {
-//                if (dy > 0) {
-//                    // 滚动到周模式
-//                    scroller.startScroll(
-//                            0, target.getTop(),
-//                            0, calendarLineHeight * 2 - target.getTop(),
-//                            duration);
-//                } else {
-//                    // 滚动到月模式
-//                    scroller.startScroll(
-//                            0, target.getTop(),
-//                            0, calendarLineHeight * 7 - target.getTop(),
-//                            duration);
-//                }
-//            }
+            int scaleY;
+            int duration = 800;
+            if (Math.abs(velocityY) < 1000) {
+                if (target.getTop() > calendarLineHeight * 4) {
+                    scaleY = calendarLineHeight * 7 - target.getTop();
+                } else {
+                    scaleY = calendarLineHeight * 2 - target.getTop();
+                }
+            } else {
+                if (velocityY > 0) {
+                    // 滚动到周模式
+                    scaleY = calendarLineHeight * 2 - target.getTop();
+                } else {
+                    // 滚动到月模式
+                    scaleY = calendarLineHeight * 7 - target.getTop();
+                }
+            }
+            duration = (duration * Math.abs(scaleY)) / (calendarLineHeight * 5);
+            scroller.startScroll(
+                    0, target.getTop(),
+                    0, scaleY,
+                    duration);
             ViewCompat.postOnAnimation(child, new Runnable() {
                 @Override
                 public void run() {
@@ -160,14 +149,12 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         }
     }
 
-    int velocityY;
-
     @Override
     public boolean onNestedPreFling(@NonNull CoordinatorLayout coordinatorLayout,
                                     @NonNull MaterialCalendarView child,
                                     @NonNull View target,
                                     float velocityX, float velocityY) {
-        this.velocityY = (int)velocityY;
+        this.velocityY = (int) velocityY;
         return !(target.getTop() == calendarLineHeight * 2 ||
                 target.getTop() == calendarLineHeight * 7);
     }
