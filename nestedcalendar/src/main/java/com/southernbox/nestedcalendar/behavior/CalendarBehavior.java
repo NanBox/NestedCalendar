@@ -103,20 +103,32 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         }
         if (calendarMode == CalendarMode.MONTHS) {
             final Scroller scroller = new Scroller(coordinatorLayout.getContext());
-            //设置scroller的滚动偏移量
-            int scrollerDy = calendarLineHeight * 4 - target.getTop();
+            int duration = 500;
             if (Math.abs(dy) < 5) {
-                scroller.startScroll(
-                        0, target.getTop(), 0, scrollerDy, 500);
+                if (target.getTop() > calendarLineHeight * 4) {
+                    scroller.startScroll(
+                            0, target.getTop(),
+                            0, calendarLineHeight * 7 - target.getTop(),
+                            duration);
+                } else {
+                    scroller.startScroll(
+                            0, target.getTop(),
+                            0, calendarLineHeight * 2 - target.getTop(),
+                            duration);
+                }
             } else {
                 if (dy > 0) {
                     // 滚动到周模式
                     scroller.startScroll(
-                            0, target.getTop(), 0, Math.abs(scrollerDy), 500);
+                            0, target.getTop(),
+                            0, calendarLineHeight * 2 - target.getTop(),
+                            duration);
                 } else {
                     // 滚动到月模式
                     scroller.startScroll(
-                            0, target.getTop(), 0, -Math.abs(scrollerDy), 500);
+                            0, target.getTop(),
+                            0, calendarLineHeight * 7 - target.getTop(),
+                            duration);
                 }
             }
             ViewCompat.postOnAnimation(child, new Runnable() {
@@ -126,7 +138,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                             target instanceof RecyclerView) {
                         canAutoScroll = false;
                         RecyclerView recyclerView = (RecyclerView) target;
-                        int delta = scroller.getCurrY() - target.getTop();
+                        int delta = target.getTop() - scroller.getCurrY();
                         recyclerView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, TYPE_TOUCH);
                         recyclerView.dispatchNestedPreScroll(
                                 0, delta, new int[2], new int[2], TYPE_TOUCH);
