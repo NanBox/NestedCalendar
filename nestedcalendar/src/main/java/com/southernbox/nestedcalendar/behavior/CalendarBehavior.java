@@ -28,6 +28,9 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     private CalendarMode calendarMode = CalendarMode.MONTHS;
     private int weekOfMonth = Calendar.getInstance().get(Calendar.WEEK_OF_MONTH);
     private int calendarLineHeight;
+    private int weekCalendarHeight;
+    private int monthCalendarHeight;
+    private int listMaxOffset;
     private int velocityY;
     private boolean canAutoScroll = true;
 
@@ -51,30 +54,33 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                   int dx, int dy,
                                   @NonNull int[] consumed,
                                   int type) {
+        // 列表未滑动到顶部时，不处理
         if (target.canScrollVertically(-1)) {
             return;
         }
         setMonthMode(child);
         if (calendarMode == CalendarMode.MONTHS) {
-            // 移动日历
             if (calendarLineHeight == 0) {
                 calendarLineHeight = child.getMeasuredHeight() / 7;
+                weekCalendarHeight = calendarLineHeight * 2;
+                monthCalendarHeight = calendarLineHeight * 7;
+                listMaxOffset = calendarLineHeight * 5;
             }
-            int headerMinOffset = -calendarLineHeight * (weekOfMonth - 1);
-            int headerOffset = MathUtils.clamp(
-                    getTopAndBottomOffset() - dy, headerMinOffset, 0);
-            setTopAndBottomOffset(headerOffset);
+            // 移动日历
+            int calendarMinOffset = -calendarLineHeight * (weekOfMonth - 1);
+            int calendarOffset = MathUtils.clamp(
+                    getTopAndBottomOffset() - dy, calendarMinOffset, 0);
+            setTopAndBottomOffset(calendarOffset);
 
             // 移动列表
             final CoordinatorLayout.Behavior behavior =
                     ((CoordinatorLayout.LayoutParams) target.getLayoutParams()).getBehavior();
             if (behavior instanceof CalendarScrollBehavior) {
                 final CalendarScrollBehavior listBehavior = (CalendarScrollBehavior) behavior;
-                int listMinOffset = -calendarLineHeight * 5;
                 int listOffset = MathUtils.clamp(
-                        listBehavior.getTopAndBottomOffset() - dy, listMinOffset, 0);
+                        listBehavior.getTopAndBottomOffset() - dy, -listMaxOffset, 0);
                 listBehavior.setTopAndBottomOffset(listOffset);
-                if (listOffset > listMinOffset && listOffset < 0) {
+                if (listOffset > -listMaxOffset && listOffset < 0) {
                     consumed[1] = dy;
                 }
             }
@@ -89,10 +95,10 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         if (calendarLineHeight == 0) {
             return;
         }
-        if (target.getTop() == calendarLineHeight * 2) {
+        if (target.getTop() == weekCalendarHeight) {
             setWeekMode(child);
             return;
-        } else if (target.getTop() == calendarLineHeight * 7) {
+        } else if (target.getTop() == monthCalendarHeight) {
             setMonthMode(child);
             return;
         }
@@ -101,27 +107,30 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
         }
         if (calendarMode == CalendarMode.MONTHS) {
             final Scroller scroller = new Scroller(coordinatorLayout.getContext());
-            int scaleY;
+            int offset;
             int duration = 800;
             if (Math.abs(velocityY) < 1000) {
                 if (target.getTop() > calendarLineHeight * 4) {
-                    scaleY = calendarLineHeight * 7 - target.getTop();
+                    // 滚动到月模式
+                    offset = monthCalendarHeight - target.getTop();
                 } else {
-                    scaleY = calendarLineHeight * 2 - target.getTop();
+                    // 滚动到周模式
+                    offset = weekCalendarHeight - target.getTop();
                 }
             } else {
                 if (velocityY > 0) {
                     // 滚动到周模式
-                    scaleY = calendarLineHeight * 2 - target.getTop();
+                    offset = weekCalendarHeight - target.getTop();
                 } else {
                     // 滚动到月模式
-                    scaleY = calendarLineHeight * 7 - target.getTop();
+                    offset = monthCalendarHeight - target.getTop();
                 }
             }
-            duration = (duration * Math.abs(scaleY)) / (calendarLineHeight * 5);
+            velocityY = 0;
+            duration = duration * Math.abs(offset) / (listMaxOffset);
             scroller.startScroll(
                     0, target.getTop(),
-                    0, scaleY,
+                    0, offset,
                     duration);
             ViewCompat.postOnAnimation(child, new Runnable() {
                 @Override
@@ -137,10 +146,9 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                         ViewCompat.postOnAnimation(child, this);
                     } else {
                         canAutoScroll = true;
-                        // 滚动完成
-                        if (target.getTop() == calendarLineHeight * 2) {
+                        if (target.getTop() == weekCalendarHeight) {
                             setWeekMode(child);
-                        } else if (target.getTop() == calendarLineHeight * 7) {
+                        } else if (target.getTop() == monthCalendarHeight) {
                             setMonthMode(child);
                         }
                     }
@@ -155,8 +163,8 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                     @NonNull View target,
                                     float velocityX, float velocityY) {
         this.velocityY = (int) velocityY;
-        return !(target.getTop() == calendarLineHeight * 2 ||
-                target.getTop() == calendarLineHeight * 7);
+        return !(target.getTop() == weekCalendarHeight ||
+                target.getTop() == monthCalendarHeight);
     }
 
     private void setMonthMode(MaterialCalendarView calendarView) {
