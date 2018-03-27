@@ -3,9 +3,9 @@
 
 # NestedCalendar
 
-Make [MaterialCalendarView](https://github.com/prolificinteractive/material-calendarview) can be nested scroll, and smooth switch to week or month mode.
+Make MaterialCalendarView can be nested scroll, and smooth switch to week or month mode.
 
-![]()
+![](https://user-gold-cdn.xitu.io/2018/3/27/16265aab5384eb19?w=304&h=538&f=gif&s=446104)
 
 # Usage
 
@@ -68,4 +68,4 @@ About MaterialCalendarView, you can see more usage at:
 
 [https://github.com/prolificinteractive/material-calendarview](https://github.com/prolificinteractive/material-calendarview)
 
-Thanks to its developers.
+Thanks to the developers.

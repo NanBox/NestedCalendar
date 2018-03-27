@@ -31,7 +31,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
     private int weekCalendarHeight;
     private int monthCalendarHeight;
     private int listMaxOffset;
-    private int velocityY;
+    private float velocityY;
     private boolean canAutoScroll = true;
 
     public CalendarBehavior(Context context, AttributeSet attrs) {
@@ -126,7 +126,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                     offset = monthCalendarHeight - target.getTop();
                 }
             }
-            velocityY = 0;
+            velocityY = 0f;
             duration = duration * Math.abs(offset) / (listMaxOffset);
             scroller.startScroll(
                     0, target.getTop(),
@@ -162,7 +162,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                     @NonNull MaterialCalendarView child,
                                     @NonNull View target,
                                     float velocityX, float velocityY) {
-        this.velocityY = (int) velocityY;
+        this.velocityY = velocityY;
         return !(target.getTop() == weekCalendarHeight ||
                 target.getTop() == monthCalendarHeight);
     }
