@@ -1,5 +1,6 @@
 [![](https://travis-ci.org/SouthernBox/NestedCalendar.svg?branch=master)](https://travis-ci.org/SouthernBox/NestedCalendar)
 [![](https://api.bintray.com/packages/southernbox/maven/NestedCalendar/images/download.svg) ](https://bintray.com/southernbox/maven/NestedCalendar/_latestVersion)
+[![](https://img.shields.io/badge/API-15+-green.svg?style=flat)](https://android-arsenal.com/api?level=15)
 [![](https://badge.juejin.im/entry/5ab9c5caf265da239d4952e4/likes.svg?style=flat)](https://juejin.im/post/5ab9c553f265da237f1e5079)
 
 # NestedCalendar
@@ -14,7 +15,7 @@ Make MaterialCalendarView can be nested scroll, and smooth switch to week or mon
 
 ```javascript
 dependencies {
-    compile 'com.southernbox:NestedCalendar:1.1.0'
+    compile 'com.southernbox:NestedCalendar:1.2.0'
 }
 ```
 **Use in your layout file:**
