@@ -5,7 +5,7 @@ android {
     compileSdkVersion 26
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -32,6 +32,6 @@ publish {
     userOrg = 'southernbox'
     groupId = 'com.southernbox'
     artifactId = 'NestedCalendar'
-    publishVersion = '1.1.0'
+    publishVersion = '1.2.0'
     website = 'https://github.com/SouthernBox/NestedCalendar'
 }
