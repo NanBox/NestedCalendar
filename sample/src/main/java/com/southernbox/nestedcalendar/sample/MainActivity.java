@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     LocalDate localDate = calendarDay.getDate();
                     LocalDate newDate;
                     if (calendarBehavior.getCalendarMode() == CalendarMode.WEEKS) {
-                        newDate = localDate.plusWeeks(dayOfWeek - 1);
+                        newDate = localDate.plusDays(dayOfWeek - 1);
                         dayOfMonth = newDate.getDayOfMonth();
                     } else {
                         int monthDays = localDate.getMonth().length(localDate.isLeapYear());
