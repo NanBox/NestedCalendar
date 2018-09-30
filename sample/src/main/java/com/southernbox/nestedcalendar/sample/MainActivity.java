@@ -15,10 +15,14 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.southernbox.nestedcalendar.behavior.CalendarBehavior;
 
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.temporal.WeekFields;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             calendarBehavior = (CalendarBehavior) behavior;
         }
         Calendar calendar = Calendar.getInstance();
-        calendarView.setSelectedDate(Calendar.getInstance());
+        calendarView.setSelectedDate(LocalDate.now());
         dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         setTitle((calendar.get(Calendar.MONTH) + 1) + "月");
@@ -52,38 +56,40 @@ public class MainActivity extends AppCompatActivity {
             calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
                 @Override
                 public void onDateSelected(@NonNull MaterialCalendarView widget,
-                                           @NonNull CalendarDay date,
+                                           @NonNull CalendarDay calendarDay,
                                            boolean selected) {
-                    Calendar calendar = date.getCalendar();
-                    calendarBehavior.setWeekOfMonth(calendar.get(Calendar.WEEK_OF_MONTH));
+                    LocalDate localDate = calendarDay.getDate();
+                    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+                    calendarBehavior.setWeekOfMonth(localDate.get(weekFields.weekOfMonth()));
                     if (selected) {
-                        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-                        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                        dayOfWeek = localDate.getDayOfWeek().getValue();
+                        dayOfMonth = localDate.getDayOfMonth();
                     }
                 }
             });
             calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
                 @Override
-                public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+                public void onMonthChanged(MaterialCalendarView widget, CalendarDay calendarDay) {
                     if (calendarBehavior.getCalendarMode() == null) {
                         return;
                     }
-                    Calendar calendar = Calendar.getInstance();
-                    date.copyTo(calendar);
+                    LocalDate localDate = calendarDay.getDate();
+                    LocalDate newDate;
                     if (calendarBehavior.getCalendarMode() == CalendarMode.WEEKS) {
-                        calendar.add(Calendar.DAY_OF_WEEK, dayOfWeek - 1);
-                        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                        newDate = localDate.plusWeeks(dayOfWeek - 1);
+                        dayOfMonth = newDate.getDayOfMonth();
                     } else {
-                        int monthDays = calendar.getActualMaximum(Calendar.DATE);
+                        int monthDays = localDate.getMonth().length(localDate.isLeapYear());
                         if (dayOfMonth > monthDays) {
                             dayOfMonth = monthDays;
                         }
-                        calendar.add(Calendar.DAY_OF_MONTH, dayOfMonth - 1);
-                        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                        newDate = localDate.plusDays(dayOfMonth - 1);
+                        dayOfWeek = newDate.getDayOfWeek().getValue();
                     }
-                    widget.setSelectedDate(calendar);
-                    calendarBehavior.setWeekOfMonth(calendar.get(Calendar.WEEK_OF_MONTH));
-                    setTitle((calendar.get(Calendar.MONTH) + 1) + "月");
+                    widget.setSelectedDate(newDate);
+                    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+                    calendarBehavior.setWeekOfMonth(newDate.get(weekFields.weekOfMonth()));
+                    setTitle(newDate.getMonth().getValue() + "月");
                 }
             });
         }
