@@ -1,4 +1,3 @@
-[![](https://travis-ci.org/SouthernBox/NestedCalendar.svg?branch=master)](https://travis-ci.org/SouthernBox/NestedCalendar)
 [![](https://api.bintray.com/packages/southernbox/maven/NestedCalendar/images/download.svg)](https://bintray.com/southernbox/maven/NestedCalendar/_latestVersion)
 [![](https://img.shields.io/badge/Android%20Arsenal-NestedCalendar-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/6978)
 [![](https://img.shields.io/badge/API-15+-green.svg?style=flat)](https://android-arsenal.com/api?level=15)

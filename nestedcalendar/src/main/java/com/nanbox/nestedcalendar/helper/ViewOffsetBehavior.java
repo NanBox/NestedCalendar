@@ -1,4 +1,4 @@
-package com.southernbox.nestedcalendar.helper;
+package com.nanbox.nestedcalendar.helper;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">NestedCalendar</string>
-    <string name="calendar_behavior" translatable="false">com.southernbox.nestedcalendar.behavior.CalendarBehavior</string>
-    <string name="calendar_scrolling_behavior" translatable="false">com.southernbox.nestedcalendar.behavior.CalendarScrollBehavior</string>
+    <string name="calendar_behavior" translatable="false">com.nanbox.nestedcalendar.behavior.CalendarBehavior</string>
+    <string name="calendar_scrolling_behavior" translatable="false">com.nanbox.nestedcalendar.behavior.CalendarScrollBehavior</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.southernbox.nestedcalendar.sample;
+package com.nanbox.nestedcalendar.sample;
 
 import android.os.Bundle;
 
@@ -14,7 +14,7 @@ import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
-import com.southernbox.nestedcalendar.behavior.CalendarBehavior;
+import com.nanbox.nestedcalendar.behavior.CalendarBehavior;
 
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.temporal.WeekFields;

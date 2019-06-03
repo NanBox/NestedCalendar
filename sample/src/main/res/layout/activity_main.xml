@@ -21,7 +21,7 @@
         app:layout_behavior="@string/calendar_scrolling_behavior"
         tools:listitem="@layout/item_list" />
 
-    <com.southernbox.nestedcalendar.view.WeekTitleView
+    <com.nanbox.nestedcalendar.view.WeekTitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fafafa" />

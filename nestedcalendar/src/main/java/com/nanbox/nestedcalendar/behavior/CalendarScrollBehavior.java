@@ -1,4 +1,4 @@
-package com.southernbox.nestedcalendar.behavior;
+package com.nanbox.nestedcalendar.behavior;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,13 +8,13 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.southernbox.nestedcalendar.helper.ViewOffsetBehavior;
+import com.nanbox.nestedcalendar.helper.ViewOffsetBehavior;
 
 import java.util.List;
 
 /**
  * 日历 Behavior
- * Created by SouthernBox on 2018/1/19.
+ * Created by NanBox on 2018/1/19.
  */
 
 public class CalendarScrollBehavior extends ViewOffsetBehavior<RecyclerView> {

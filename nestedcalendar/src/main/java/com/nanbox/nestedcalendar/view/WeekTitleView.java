@@ -1,4 +1,4 @@
-package com.southernbox.nestedcalendar.view;
+package com.nanbox.nestedcalendar.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.southernbox.nestedcalendar.R;
+import com.nanbox.nestedcalendar.R;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -17,7 +17,7 @@ import static java.util.Calendar.DATE;
 
 /**
  * 星期标题
- * Created by SouthernBox on 2018/1/23.
+ * Created by NanBox on 2018/1/23.
  */
 
 public class WeekTitleView extends ViewGroup {

@@ -1,4 +1,4 @@
-package com.southernbox.nestedcalendar.behavior;
+package com.nanbox.nestedcalendar.behavior;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.southernbox.nestedcalendar.helper.ViewOffsetBehavior;
+import com.nanbox.nestedcalendar.helper.ViewOffsetBehavior;
 
 import java.util.Calendar;
 
@@ -21,7 +21,7 @@ import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * 列表 Behavior
- * Created by SouthernBox on 2018/1/19.
+ * Created by NanBox on 2018/1/19.
  */
 
 public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {

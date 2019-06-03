@@ -1,4 +1,4 @@
-package com.southernbox.nestedcalendar.sample;
+package com.nanbox.nestedcalendar.sample;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * 列表适配器
- * Created by SouthernBox on 2018/1/18.
+ * Created by NanBox on 2018/1/18.
  */
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.TextHolder> {
