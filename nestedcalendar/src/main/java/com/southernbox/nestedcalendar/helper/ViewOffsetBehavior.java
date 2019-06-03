@@ -1,9 +1,10 @@
 package com.southernbox.nestedcalendar.helper;
 
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
  * Copy from Android design library

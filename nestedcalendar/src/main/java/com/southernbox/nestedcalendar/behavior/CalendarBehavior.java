@@ -1,14 +1,15 @@
 package com.southernbox.nestedcalendar.behavior;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.math.MathUtils;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Scroller;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.math.MathUtils;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -16,7 +17,7 @@ import com.southernbox.nestedcalendar.helper.ViewOffsetBehavior;
 
 import java.util.Calendar;
 
-import static android.support.v4.view.ViewCompat.TYPE_TOUCH;
+import static androidx.core.view.ViewCompat.TYPE_TOUCH;
 
 /**
  * 列表 Behavior
@@ -44,7 +45,7 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                        @NonNull View directTargetChild,
                                        @NonNull View target,
                                        int axes, int type) {
-        return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+        return (axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0 && !target.canScrollVertically(-1);
     }
 
     @Override
@@ -163,8 +164,17 @@ public class CalendarBehavior extends ViewOffsetBehavior<MaterialCalendarView> {
                                     @NonNull View target,
                                     float velocityX, float velocityY) {
         this.velocityY = velocityY;
-        return !(target.getTop() == weekCalendarHeight ||
-                target.getTop() == monthCalendarHeight);
+        return (!(target.getTop() == weekCalendarHeight ||
+                target.getTop() == monthCalendarHeight)) && !target.canScrollVertically(-1);
+    }
+
+    @Override
+    public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout,
+                                 @NonNull MaterialCalendarView child,
+                                 @NonNull View target,
+                                 float velocityX, float velocityY,
+                                 boolean consumed) {
+        return super.onNestedFling(coordinatorLayout, child, target, velocityX, velocityY, consumed);
     }
 
     private void setMonthMode(MaterialCalendarView calendarView) {

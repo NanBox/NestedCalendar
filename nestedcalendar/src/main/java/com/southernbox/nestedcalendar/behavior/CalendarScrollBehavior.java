@@ -1,10 +1,11 @@
 package com.southernbox.nestedcalendar.behavior;
 
 import android.content.Context;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.southernbox.nestedcalendar.helper.ViewOffsetBehavior;
