@@ -15,16 +15,17 @@ Make MaterialCalendarView can be nested scroll, and smooth switch to week or mon
 
 ```javascript
 dependencies {
-    compile 'com.southernbox:NestedCalendar:1.2.0'
+    implementation 'com.nanbox:NestedCalendar:1.3.0'
 }
 ```
 **Use in your layout file:**
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,19 +36,21 @@ dependencies {
         app:layout_behavior="@string/calendar_behavior"
         app:mcv_showOtherDates="all" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/list_margin_bottom"
-        app:layout_behavior="@string/calendar_scrolling_behavior"/>
+        android:layout_marginBottom="110dp"
+        android:background="@color/color_ee"
+        app:layout_behavior="@string/calendar_scrolling_behavior"
+        tools:listitem="@layout/item_list" />
 
-    <com.southernbox.nestedcalendar.view.WeekTitleView
+    <com.nanbox.nestedcalendar.view.WeekTitleView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#fafafa" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 ```
 
 **Add listener:**
